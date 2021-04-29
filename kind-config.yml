@@ -6,3 +6,5 @@ nodes:
   extraPortMappings:
   - containerPort: 25565
     hostPort: 25565
+    listenAddress: "127.0.0.1"
+    protocol: TCP

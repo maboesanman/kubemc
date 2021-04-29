@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: mc-limbo
-        image: mc-limbo
+        image: mc-limbo 
+        imagePullPolicy: Never
         ports:
         - containerPort: 25565
-          hostPort: 25565
