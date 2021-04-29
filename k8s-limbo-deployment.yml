@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: limbo-deployment
+  labels:
+    app: limbo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: limbo
+  template:
+    metadata:
+      labels:
+        app: limbo
+    spec:
+      containers:
+      - name: mc-limbo
+        image: mc-limbo
+        ports:
+        - containerPort: 25565
+          hostPort: 25565

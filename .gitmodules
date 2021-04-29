@@ -1,0 +1,6 @@
+[submodule "mc-limbo"]
+	path = mc-limbo
+	url = https://github.com/maboesanman/mc-limbo
+[submodule "mc-velocity"]
+	path = mc-velocity
+	url = https://github.com/maboesanman/mc-velocity
