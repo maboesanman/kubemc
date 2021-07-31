@@ -5,7 +5,12 @@ metadata:
   labels:
     app: limbo
 spec:
-  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  replicas: 1
   selector:
     matchLabels:
       app: limbo
@@ -19,4 +24,13 @@ spec:
         image: mc-limbo 
         imagePullPolicy: Never
         ports:
-        - containerPort: 25565
+        - name: game-port
+          containerPort: 25565
+          hostPort: 25565
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
+          limits:
+            cpu: 1
+            memory: 2Gi
