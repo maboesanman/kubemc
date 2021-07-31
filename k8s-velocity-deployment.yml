@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: velocity-deployment
+  labels:
+    app: velocity
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  replicas: 1
+  selector:
+    matchLabels:
+      app: velocity
+  template:
+    metadata:
+      labels:
+        app: velocity
+    spec:
+      containers:
+      - name: mc-velocity
+        image: mc-velocity
+        imagePullPolicy: Never
+        ports:
+        - name: game-port
+          containerPort: 25577
+          hostPort: 25577
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
+          limits:
+            cpu: 1
+            memory: 2Gi

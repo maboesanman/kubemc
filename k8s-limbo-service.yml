@@ -3,12 +3,10 @@ kind: Service
 metadata:
   name: limbo-service
 spec:
-  type: NodePort
+  selector:
+    app: limbo
   ports:
   - name: default
     protocol: TCP
     port: 25565
     targetPort: 25565
-    nodePort: 32565
-  selector:
-    app: limbo
