@@ -36,10 +36,10 @@ spec:
           containerPort: 25577
         resources:
           requests:
-            cpu: 500m
+            cpu: 100m
             memory: 100Mi
           limits:
-            cpu: 1
+            cpu: 1000m
             memory: 2Gi
         env:
         - name: EULA

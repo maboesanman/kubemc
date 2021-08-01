@@ -47,12 +47,18 @@ spec:
           containerPort: 25565
         resources:
           requests:
-            cpu: 50m
-            memory: 100Mi
-          limits:
-            cpu: 1
+            cpu: 500m
             memory: 2Gi
+          limits:
+            cpu: 4000m
+            memory: 8Gi
         env:
+        - name: INIT_MEMORY
+          value: "1500M"
+        - name: MAX_MEMORY
+          value: "7G"
+        - name: USE_AIKAR_FLAGS
+          value: "TRUE"
         - name: EULA
           value: "TRUE"
         - name: VERSION
@@ -81,6 +87,8 @@ spec:
           value: "maboesanman"
         - name: OPS
           value: "maboesanman"
+        - name: TZ
+          value: "America/Chicago"
 ---
 apiVersion: v1
 kind: Service
