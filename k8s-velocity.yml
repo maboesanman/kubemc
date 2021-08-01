@@ -19,14 +19,21 @@ spec:
       labels:
         app: velocity
     spec:
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: velocity-config
+          readOnly: true
       containers:
       - name: mc-velocity
-        image: mc-velocity
-        imagePullPolicy: Never
+        image: itzg/bungeecord
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: config
+          mountPath: /config
         ports:
         - name: game-port
           containerPort: 25577
-          hostPort: 25577
         resources:
           requests:
             cpu: 500m
@@ -34,6 +41,13 @@ spec:
           limits:
             cpu: 1
             memory: 2Gi
+        env:
+        - name: EULA
+          value: "TRUE"
+        - name: TYPE
+          value: "VELOCITY"
+        - name: VELOCITY_VERSION
+          value: 3.0.0
 ---
 apiVersion: v1
 kind: Service

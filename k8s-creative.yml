@@ -1,49 +1,107 @@
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mysql-pv-claim
-  labels:
-    app: mysql
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wordpress-mysql
+  name: creative-deployment
   labels:
-    app: mysql
+    app: creative
 spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  replicas: 1
   selector:
     matchLabels:
-      app: mysql
-  strategy:
-    type: Recreate
+      app: creative
   template:
     metadata:
       labels:
-        app: mysql
+        app: creative
     spec:
-      containers:
-      - image: mysql:8
-        name: mysql
-        env:
-        - name: MYSQL_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql-pass
-              key: password
-        ports:
-        - containerPort: 3306
-          name: mysql
-        volumeMounts:
-        - name: mysql-persistent-storage
-          mountPath: /var/lib/mysql
       volumes:
-      - name: mysql-persistent-storage
+      - name: data
         persistentVolumeClaim:
-          claimName: mysql-pv-claim
+          claimName: creative-data
+      - name: mods
+        persistentVolumeClaim:
+          claimName: creative-mods
+          readOnly: true
+      - name: config
+        persistentVolumeClaim:
+          claimName: creative-config
+          readOnly: true
+      containers:
+      - name: creative
+        image: itzg/minecraft-server
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        - name: mods
+          mountPath: /mods
+        - name: config
+          mountPath: /config
+        ports:
+        - name: game-port
+          containerPort: 25565
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
+          limits:
+            cpu: 1
+            memory: 2Gi
+        env:
+        - name: EULA
+          value: "TRUE"
+        - name: VERSION
+          value: "1.17.1"
+        - name: TYPE
+          value: "FABRIC"
+        - name: MODE
+          value: "creative"
+        - name: FORCE_GAMEMODE
+          value: "true"
+        - name: OVERRIDE_SERVER_PROPERTIES
+          value: "true"
+        - name: ONLINE_MODE
+          value: "TRUE"
+        - name: REMOVE_OLD_MODS
+          value: "TRUE"
+        - name: ENABLE_AUTOPAUSE
+          value: "TRUE"
+        - name: AUTOPAUSE_TIMEOUT_EST
+          value: "600"
+        - name: MAX_TICK_TIME
+          value: "-1"
+        - name: DIFFICULTY
+          value: hard
+        - name: WHITELIST
+          value: "maboesanman"
+        - name: OPS
+          value: "maboesanman"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: creative-service
+spec:
+  selector:
+    app: creative
+  ports:
+  - name: default
+    protocol: TCP
+    port: 25565
+    targetPort: 25565
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: creative-data
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
