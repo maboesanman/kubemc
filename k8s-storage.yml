@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: server-data
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 400Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "/Volumes/Minecraft/kubemc"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: tmp
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: DELETE
+  hostPath:
+    path: "/tmp/minecraft"
