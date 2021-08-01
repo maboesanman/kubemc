@@ -108,6 +108,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: survival-data
 spec:
+  storageClassName: "manual"
   accessModes:
   - ReadWriteOnce
   resources:

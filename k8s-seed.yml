@@ -3,6 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: velocity-config
 spec:
+  storageClassName: "manual"
   accessModes:
   - ReadWriteOnce
   resources:
@@ -15,6 +16,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: survival-mods
 spec:
+  storageClassName: "manual"
   accessModes:
   - ReadWriteOnce
   resources:
@@ -27,6 +29,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: survival-config
 spec:
+  storageClassName: "manual"
   accessModes:
   - ReadWriteOnce
   resources:
@@ -39,6 +42,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: creative-mods
 spec:
+  storageClassName: "manual"
   accessModes:
   - ReadWriteOnce
   resources:
@@ -51,6 +55,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: creative-config
 spec:
+  storageClassName: "manual"
   accessModes:
   - ReadWriteOnce
   resources:

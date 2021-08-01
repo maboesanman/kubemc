@@ -108,6 +108,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: creative-data
 spec:
+  storageClassName: "manual"
   accessModes:
   - ReadWriteOnce
   resources:
