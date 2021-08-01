@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: survival-deployment
+  labels:
+    app: survival
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  replicas: 1
+  selector:
+    matchLabels:
+      app: survival
+  template:
+    metadata:
+      labels:
+        app: survival
+    spec:
+      volumes:
+      - name: world
+        persistentVolumeClaim:
+          claimName: survival-world
+      - name: mods
+        persistentVolumeClaim:
+          claimName: survival-mods
+          readOnly: true
+      - name: config
+        persistentVolumeClaim:
+          claimName: survival-config
+          readOnly: true
+      containers:
+      - name: survival
+        image: itzg/minecraft-server
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: world
+          mountPath: /data
+          subPath: world
+        - name: mods
+          mountPath: /mods
+        ports:
+        - name: game-port
+          containerPort: 25565
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
+          limits:
+            cpu: 1
+            memory: 2Gi
+        env:
+        - name: EULA
+          value: "TRUE"
+        - name: VERSION
+          value: 1.17.1
+        - name: TYPE
+          value: "FABRIC"
+        - name: ONLINE_MODE
+          value: "FALSE"
+        - name: REMOVE_OLD_MODS
+          value: "TRUE"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: survival-service
+spec:
+  selector:
+    app: survival
+  ports:
+  - name: default
+    protocol: TCP
+    port: 25565
+    targetPort: 25565
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: survival-world
+  labels:
+    app: survival
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: survival-mods
+  labels:
+    app: survival
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Mi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: survival-config
+  labels:
+    app: survival
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Mi

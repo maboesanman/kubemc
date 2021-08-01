@@ -9,3 +9,6 @@ nodes:
     listenAddress: "0.0.0.0"
     protocol: tcp
 - role: worker
+  extraMounts:
+  - hostPath: ./shared-storage
+    containerPath: /var/local-path-provisioner

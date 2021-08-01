@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# create cluster
-kind create cluster --config kind-config.yml
-
 # build images
 docker build -t mc-limbo mc-limbo
 docker build -t mc-velocity mc-velocity
@@ -14,4 +11,4 @@ kind load docker-image --name kubemc mc-velocity
 # apply configs
 kubectl apply -f k8s-limbo.yml
 kubectl apply -f k8s-velocity.yml
-kubectl apply -f k8s-survival.yml
+kubectl apply -f k8s-database.yml
