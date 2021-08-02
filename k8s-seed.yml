@@ -9,7 +9,7 @@ spec:
   resources:
     requests:
       storage: 5Mi
-  volumeName: tmp
+  volumeName: velocity-config
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -22,7 +22,7 @@ spec:
   resources:
     requests:
       storage: 5Mi
-  volumeName: tmp
+  volumeName: survival-mods
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -35,7 +35,7 @@ spec:
   resources:
     requests:
       storage: 5Mi
-  volumeName: tmp
+  volumeName: survival-config
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -48,7 +48,7 @@ spec:
   resources:
     requests:
       storage: 5Mi
-  volumeName: tmp
+  volumeName: creative-mods
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -61,7 +61,7 @@ spec:
   resources:
     requests:
       storage: 5Mi
-  volumeName: tmp
+  volumeName: creative-config
 ---
 apiVersion: v1
 kind: Pod

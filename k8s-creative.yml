@@ -113,5 +113,5 @@ spec:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
-  volumeName: server-data
+      storage: 100Gi
+  volumeName: creative-data
