@@ -36,20 +36,20 @@ spec:
         resources:
           requests:
             cpu: 500m
-            memory: 1Gi
-          limits:
-            cpu: 2000m
             memory: 2Gi
+          limits:
+            cpu: 4000m
+            memory: 8Gi
         env:
-        - name: CFG_FORWARDING_SECRET
+        - name: FABRIC_PROXY_SECRET
           valueFrom:
             secretKeyRef:
               name: player-forwarding-secret
               key: secret
         - name: INIT_MEMORY
-          value: "500M"
+          value: "1500M"
         - name: MAX_MEMORY
-          value: "1800M"
+          value: "7G"
         - name: EULA
           value: "TRUE"
         - name: MODE
