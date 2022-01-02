@@ -1,0 +1,106 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: survival-laurel-deployment
+  labels:
+    app: survival-laurel
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  replicas: 1
+  selector:
+    matchLabels:
+      app: survival-laurel
+  template:
+    metadata:
+      labels:
+        app: survival-laurel
+    spec:
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: survival-laurel-data
+      containers:
+      - name: survival-laurel
+        image: public.ecr.aws/p2i2f2e4/minecraft-server:1.18.1-fabric
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        ports:
+        - name: game-port
+          containerPort: 25565
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 2000m
+            memory: 2Gi
+        env:
+        - name: CFG_FORWARDING_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: player-forwarding-secret
+              key: secret
+        - name: INIT_MEMORY
+          value: "500M"
+        - name: MAX_MEMORY
+          value: "1800M"
+        - name: EULA
+          value: "TRUE"
+        - name: MODE
+          value: "survival"
+        - name: FORCE_GAMEMODE
+          value: "true"
+        - name: DIFFICULTY
+          value: normal
+        - name: WHITELIST
+          value: "maboesanman"
+        - name: OPS
+          value: "maboesanman"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: survival-laurel-service
+spec:
+  selector:
+    app: survival-laurel
+  ports:
+  - name: default
+    protocol: TCP
+    port: 25565
+    targetPort: 25565
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: survival-laurel-data
+spec:
+  storageClassName: "manual"
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+  volumeName: survival-laurel-data
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: survival-laurel-data
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 100Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "/Volumes/Minecraft/kubemc/survival-laurel"

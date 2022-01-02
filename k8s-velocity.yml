@@ -19,18 +19,10 @@ spec:
       labels:
         app: velocity
     spec:
-      volumes:
-      - name: config
-        persistentVolumeClaim:
-          claimName: velocity-config
-          readOnly: true
       containers:
       - name: mc-velocity
-        image: itzg/bungeecord
+        image: public.ecr.aws/p2i2f2e4/velocity:latest
         imagePullPolicy: Always
-        volumeMounts:
-        - name: config
-          mountPath: /config
         ports:
         - name: game-port
           containerPort: 25577
@@ -44,10 +36,11 @@ spec:
         env:
         - name: EULA
           value: "TRUE"
-        - name: TYPE
-          value: "VELOCITY"
-        - name: VELOCITY_VERSION
-          value: 3.0.0
+        - name: CFG_FORWARDING_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: player-forwarding-secret
+              key: secret
 ---
 apiVersion: v1
 kind: Service
